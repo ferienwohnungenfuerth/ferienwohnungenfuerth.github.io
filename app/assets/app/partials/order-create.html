@@ -1,0 +1,162 @@
+<section id="order-create">
+	<form name="form" submit-on="paymentEvent" novalidate role="form"
+		id="paypal_form" action="https://www.paypal.com/cgi-bin/webscr"
+		method="get">
+		<input type="hidden" id="paypal_invoice" name="invoice"> <input
+			type="hidden" id="paypal_custom" name="custom"> <input
+			type="hidden" name="cmd" value="_xclick"> <input
+			type="hidden" id="business" name="business"
+			value="objectworkz@googlemail.com"> <input type="hidden"
+			id="item_name" name="item_name" ng-value="product.name"> <input
+			type="hidden" name="item_number" ng-value="product.key"> <input
+			type="hidden" name="button_subtype" value="services"> <input
+			type="hidden" name="no_note" value="0"> <input type="hidden"
+			name="currency_code" ng-value="product.currency"> <input
+			type="hidden" name="tax_rate" ng-value="product.taxPercentage">
+		<input type="hidden" name="shipping" ng-value="product.shippingFee">
+		<input type="hidden" name="amount" ng-value="product.price" /> <input
+			type="hidden" name="return" ng-value="config.returnUrl">
+
+	</form>
+	<div class="container" ng-form="form">
+		<div class="row">
+			<div class="col-lg-10 col-lg-offset-1">
+				<h1>IHRE BESTELLUNG</h1>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-lg-10 col-lg-offset-1">
+				<table class="table table-bordered">
+					<tr>
+						<th class="quantity">Anzahl</th>
+						<th class="item_number">Artikelnummer</th>
+						<th class="description">Beschreibung</th>
+						<th class="amount">Preis</th>
+					</tr>
+					<tr>
+						<th><input type="number" class="form-control"
+							ng-model="order.quantity" name="quantity" value="1"></th>
+						<th>{{product.key}}</th>
+						<th>{{product.name}}</th>
+						<th>{{product.price|number:2}} {{product.currency}}</th>
+					</tr>
+					<tr>
+						<th>&nbsp;</th>
+						<th>&nbsp;</th>
+						<th>Nettopreis</th>
+						<th><calculated-order-net-price
+								id="calculated-order-net-price" ng-base="price" ng-model="order"
+								ng-product-model="product" ng-quantity="quantity"></calculated-order-net-price>
+							{{product.currency}}</th>
+					</tr>
+					<tr ng-if="product.taxPercentage > 0">
+						<th>&nbsp;</th>
+						<th>&nbsp;</th>
+						<th>MwSt.</b></th>
+						<th><calculated-order-vat id="calculated-order-vat"
+								ng-base="price" ng-vat="taxPercentage" ng-model="order"
+								ng-product-model="product" ng-quantity="quantity"></calculated-order-vat>
+							{{product.currency}}</th>
+					</tr>
+					<tr>
+						<th>&nbsp;</th>
+						<th>&nbsp;</th>
+						<th><b>Gesamtpreis</b></th>
+						<th><b> <calculated-order-gross-price
+									id="calculated-order-gross-price" ng-base="price"
+									ng-vat="taxPercentage" ng-model="order"
+									ng-product-model="product" ng-quantity="quantity"></calculated-order-gross-price>
+								{{product.currency}}
+						</b></th>
+					</tr>
+				</table>
+				<div class="form-group">
+					<label class="control-label" for="firstname">Vorname</label><input
+						id="firstname" name="firstname" type="text" class="form-control input-lg"
+						placeholder="Bitte Vornamen eingeben" required="required"
+						ng-minlength="2" ng-model="order.firstname">
+					<div class="alert alert-danger"
+						ng-show="form.firstname.$error.minlength">
+						<span ng-show="form.firstname.$error.minlength">Mindestens
+							2 Zeichen</span>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label" for="surname">Nachname</label><input
+						id="surname" name="surname" type="text" class="form-control input-lg"
+						placeholder="Bitte Nachnamen eingeben" required="required"
+						ng-minlength="2" ng-model="order.surname">
+					<div class="alert alert-danger"
+						ng-show="form.surname.$error.minlength">
+						<span ng-show="form.surname.$error.minlength">Mindestens 2
+							Zeichen</span>
+					</div>
+				</div>
+				<span ng-if="product.type === 'PHYSICAL'">
+					<div class="form-group">
+						<label class="control-label" for="addressLine1">Adresse</label><input
+							id="addressLine1" name="addressLine1" type="text"
+							class="form-control input-lg" placeholder="Adressezeile 1"
+							required="required" ng-minlength="5"
+							ng-model="order.addressLine1"><input id="addressLine1"
+							name="addressLine2" type="text" class="form-control input-lg"
+							placeholder="Adressezeile 2" ng-model="order.addressLine2">
+						<div class="alert alert-danger"
+							ng-show="form.addressLine1.$error.minlength">
+							<span ng-show="form.addressLine1.$error.minlength">Mindestens
+								5 Zeichen</span>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="control-label" for="zip">Postleitzahl</label><input
+							id="zip" name="zip" type="text" class="form-control input-lg"
+							placeholder="Bitte Postleitzahl eingeben" required="required"
+							ng-minlength="4" ng-model="order.zip">
+						<div class="alert alert-danger"
+							ng-show="form.zip.$error.minlength">
+							<span ng-show="form.zip.$error.minlength">Mindestens 4
+								Zeichen</span>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="control-label" for="city">Stadt</label><input
+							id="city" name="city" type="text" class="form-control input-lg"
+							placeholder="Bitte Stadt eingeben" required="required"
+							ng-minlength="2" ng-model="order.city">
+						<div class="alert alert-danger"
+							ng-show="form.city.$error.minlength">
+							<span ng-show="form.city.$error.minlength">Mindestens 2
+								Zeichen</span>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="control-label" for="Telefon">Phone</label><input
+							id="phone" name="phone" type="text" class="form-control input-lg"
+							placeholder="Bitte Telefonnummer eingeben" required="required"
+							ng-pattern="/^((\+)?[1-9]{1,2})?([-\s\.])?((\(\d{1,4}\))|\d{1,4})(([-\s\.])?[0-9]{1,12}){1,2}(\s*(ext|x)\s*\.?:?\s*([0-9]+))?$/"
+							ng-model="order.phone">
+						<div class="alert alert-danger"
+							ng-show="form.phone.$error.pattern">
+							<span ng-show="form.phone.$error.pattern">Die
+								Telefonnummer ist ung&uuml;ltig!</span>
+						</div>
+					</div>
+				</span>
+				<div class="form-group">
+					<label class="control-label" for="email">E-Mail</label><input
+						id="email" name="email" type="email" class="form-control input-lg"
+						placeholder="Bitte E-Mail-Adresse eingeben" required="required"
+						ng-pattern="/^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}$/"
+						ng-model="order.email">
+					<div class="alert alert-danger" ng-show="form.email.$error.pattern">
+						<span ng-show="form.email.$error.pattern">E-Mail-Adresse
+							ung&uuml;ltig!</span>
+					</div>
+				</div>
+				<button ng-click="create(order)"
+					ng-disabled="form.$invalid || wasSubmitted"
+					class="btn btn-success btn-lg">Abschicken</button>
+			</div>
+		</div>
+	</div>
+</section>

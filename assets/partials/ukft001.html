@@ -1,0 +1,75 @@
+
+<div class="col-lg-10 col-lg-offset-1">
+
+	<div class="alert alert-danger"
+		ng-show="wasSubmitted && !form.$invalid">Diese Unterkunft ist
+		f&uuml;r diesen Zeitraum leider ausgebucht</div>
+	<div class="alert alert-danger" ng-show="form.$error.range">Dieser
+		Zeitraum ist ung&uuml;ltig: Enddatum vor Startdatum</div>
+	<div class="alert alert-danger" ng-show="form.$error.overlap">Die
+		Ferienwohnung ist im genannten Zeitraum ausbucht oder Ihr Zeitraum
+		&uuml;berlappt mit einer anderen Buchnung</div>
+	<div class="alert alert-danger" ng-show="form.$error.minStay">Die Mindestaufenthaltsdauer betr&auml;gt 2 N&auml;chte!</div>
+	<div class="form-inline" range-validation overlap-validation min-stay-validation
+		min-stay="2" booking-from="from" booking-to="to"
+		ng-model="booking" booking-model-name="booking"
+		product-model-name="product">
+		<div class="form-group">
+			<div class="input-group input-group-lg">
+				<span class="input-group-btn"><button
+						ng-click="openFrom($event)" class="btn btn-default" title="From">
+						<span class="glyphicon glyphicon-calendar"></span>
+					</button></span> <input type="text" id="input-from" name="from"
+					class="form-control" ng-model="booking.from" required="true"
+					placeholder="Von" datepicker-popup="dd.MM.yyyy"
+					is-open="openedFrom" min="minDate" datepicker-options="dateOptions"
+					date-disabled="disabled(date, mode)" current-text="Heute"
+					toggle-weeks-text="Wochen" clear-text="L&ouml;schen"
+					close-text="Schliessen" show-weeks="false" show-button-bar="false" />
+			</div>
+		</div>
+		<div class="form-group">
+			<div class="input-group input-group-lg">
+				<span class="input-group-btn"><button
+						ng-click="openTo($event)" class="btn btn-default btn-lg"
+						title="From">
+						<span class="glyphicon glyphicon-calendar"></span>
+					</button></span> <input type="text" id="input-to" name="to" class="form-control"
+					ng-model="booking.to" required="true" placeholder="Bis"
+					datepicker-popup="dd.MM.yyyy" is-open="openedTo" min="minDate"
+					datepicker-options="dateOptions"
+					date-disabled="disabled(date, mode)" current-text="Heute"
+					toggle-weeks-text="Wochen" clear-text="L&ouml;schen"
+					close-text="Schliessen" show-weeks="false" show-button-bar="false" />
+			</div>
+		</div>
+		<div class="form-group">
+			<select class="form-control input-lg" ng-model="booking.numOfPersons">
+				<option value="1">1 Person</option>
+				<option value="2">2 Personen</option>
+				<option value="3">3 Personen</option>
+				<option value="4">4 Personen</option>
+			</select>
+		</div>
+		<a ng-disabled="form.$invalid"
+			href="/app.html#/booking-create/UKFT001/?from={{booking.from.toISOString()}}&to={{booking.to.toISOString()}}&persons={{booking.numOfPersons}}"
+			id="create-button" class="btn btn-lg btn-success">Jetzt buchen</a>
+
+	</div>
+	<div>
+		<h3>
+			Gesamtpreis:
+			<calculated-booking-net-price id="calculated-booking-net-price"
+				base-day="59" base-week="49" base-month="39" ng-model="booking"
+				ng-amount="amount" ng-from="from" ng-to="to"></calculated-booking-net-price>
+			&#8364; f&uuml;r
+			<number-of-nights id="number-of-nights" ng-model="booking"
+				ng-from="from" ng-to="to"></number-of-nights>
+			<span ng-show="numberOfNights !== 1">N&auml;chte</span><span
+				ng-show="numberOfNights == 1">Nacht</span>
+		</h3>
+	</div>
+
+	<div class="spacer"></div>
+	<i class="fa fa-angle-down"></i>
+</div>

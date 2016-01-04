@@ -1,0 +1,29 @@
+<section id="booking-list">
+	<div class="container">
+		<div class="row">
+			<div class="col-lg-10 col-lg-offset-1">
+				<h1>DEINE BUCHUNGEN</h1>
+			</div>
+		</div>
+		<div class="container">
+			<div class="row">
+				<div class="col-lg-10 col-lg-offset-1">
+					<div class="list-group list-group-flush">
+						<a class="details-url"
+							href="/app.html#/booking-details/{{booking.id}}"
+							class="list-group-item" ng-repeat="booking in bookings">
+							<p class="list-group-text from">{{booking.from|date:'dd.MM.yyyy'}}</p>
+							<p class="list-group-text to">{{booking.to|date:'dd.MM.yyyy'}}</p>
+						</a>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-lg-10 col-lg-offset-1">
+					<a ng-click="logout()" id="logout-button"
+						class="btn btn-lg btn-success">LOGOUT</a>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>

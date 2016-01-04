@@ -1,0 +1,192 @@
+<div ng-controller="ModalController">
+    <script type="text/ng-template" id="spinner.html">
+        <div class="modal-header">
+            <h3 class="modal-title">Ihre Buchung wird verarbeitet.<br>Sie werden in K&uuml;rze zu Paypal weitergeleitet.</h3>
+        </div>
+    </script>
+</div>
+
+<section id="booking-create">
+	<div class="container" ng-form="form">
+		<div class="row">
+			<div class="col-lg-10 col-lg-offset-1">
+				<h1>BUCHUNG</h1>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-lg-10 col-lg-offset-1"><h2>{{product.name}}</h2></div>
+		</div>
+		<div class="row">
+			<div class="col-lg-10 col-lg-offset-1">
+				<div class="alert alert-success"
+					ng-show="wasSuccessful && isAccountActivated && !form.$invalid">Herzlichen
+					Gl&uuml;ckwunsch Deine Buchung ist vorgemerkt. Du wirst nun zu
+					Paypal weitergeleitet.</div>
+				<div class="alert alert-warning"
+					ng-show="wasSuccessful && !isAccountActivated && !form.$invalid">Herzlichen
+					Gl&uuml;ckwunsch Deine Buchung ist fast abgeschlossen. Bitte
+					&uuml;berpr&uuml;fe aber unbedingt Deine E-Mails und klicke auf den
+					Best&auml;tigungslink in der E-mail, die wir dir an folgende
+					Adresse gesendet haben: {{username}}</div>
+				<div class="alert alert-danger" ng-show="form.$error.range">Dieser
+					Zeitraum ist ung&uuml;ltig: Enddatum vor Startdatum</div>
+				<div class="alert alert-danger" ng-show="form.$error.overlap">Dieser
+					Zeitraum ist ung&uuml;ltig: Zeitraum &uuml;berlappt mit einer
+					anderen Buchung</div>
+				<div class="form-inline" range-validation overlap-validation
+					booking-from="from" booking-to="to" ng-model="booking"
+					booking-model-name="booking" product-model-name="product">
+					<div class="form-group">
+						<div class="input-group input-group-lg">
+							<span class="input-group-btn"><button
+									ng-click="openFrom($event)" class="btn btn-default"
+									title="From">
+									<span class="glyphicon glyphicon-calendar"></span>
+								</button></span> <input type="text" id="input-from" name="from"
+								class="form-control" ng-model="booking.from" required="true"
+								placeholder="Von" datepicker-popup="dd.MM.yyyy"
+								is-open="openedFrom" min="minDate"
+								datepicker-options="dateOptions"
+								date-disabled="disabled(date, mode)" current-text="Heute"
+								toggle-weeks-text="Wochen" clear-text="L&ouml;schen"
+								close-text="Schliessen" show-weeks="false"
+								show-button-bar="false" />
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="input-group input-group-lg">
+							<span class="input-group-btn"><button
+									ng-click="openTo($event)" class="btn btn-default btn-lg"
+									title="From">
+									<span class="glyphicon glyphicon-calendar"></span>
+								</button></span> <input type="text" id="input-to" name="to" class="form-control"
+								ng-model="booking.to" required="true" placeholder="Bis"
+								datepicker-popup="dd.MM.yyyy" is-open="openedTo" min="minDate"
+								datepicker-options="dateOptions"
+								date-disabled="disabled(date, mode)" current-text="Heute"
+								toggle-weeks-text="Wochen" clear-text="L&ouml;schen"
+								close-text="Schliessen" show-weeks="false"
+								show-button-bar="false" />
+						</div>
+					</div>
+					<div class="form-group">
+						<select class="form-control input-lg"
+							ng-model="booking.numOfPersons">
+							<option value="1">1 Person</option>
+							<option value="2">2 Personen</option>
+							<option value="3">3 Personen</option>
+							<option value="4">4 Personen</option>
+						</select>
+					</div>
+				</div>
+				<div>
+					<h3>
+						Gesamtpreis:
+						<calculated-booking-net-price id="calculated-booking-net-price"
+							base-day="59" base-week="49" base-month="39" ng-model="booking"
+							ng-amount="amount" ng-from="from" ng-to="to"></calculated-booking-net-price>
+						&#8364; f&uuml;r
+						<number-of-nights id="number-of-nights" ng-model="booking"
+							ng-from="from" ng-to="to"></number-of-nights>
+						<span ng-show="numberOfNights !== 1">N&auml;chte</span><span
+							ng-show="numberOfNights == 1">Nacht</span>
+					</h3>
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-lg-10 col-lg-offset-1">
+				<div class="form-group">
+					<label class="control-label" for="firstname">Vorname</label><input
+						id="firstname" name="firstname" type="text"
+						class="form-control input-lg"
+						placeholder="Bitte Vornamen eingeben" required="required"
+						ng-minlength="2" ng-model="booking.firstname">
+					<div class="alert alert-danger"
+						ng-show="form.firstname.$error.minlength">
+						<span id="firstname.error"
+							ng-show="form.firstname.$error.minlength">Mindestens 2
+							Zeichen</span>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label" for="surname">Nachname</label><input
+						id="surname" name="surname" type="text"
+						class="form-control input-lg"
+						placeholder="Bitte Nachnamen eingeben" required="required"
+						ng-minlength="2" ng-model="booking.surname">
+					<div class="alert alert-danger"
+						ng-show="form.surname.$error.minlength">
+						<span id="surname.error" ng-show="form.surname.$error.minlength">Mindestens
+							2 Zeichen</span>
+					</div>
+				</div>
+				<div ng-if="product.type === 'PHYSICAL'">
+					<div class="form-group">
+						<label class="control-label" for="addressLine1">Adresse</label><input
+							id="addressLine1" name="addressLine1" type="text"
+							class="form-control input-lg" placeholder="Adressezeile 1"
+							required="required" ng-minlength="5"
+							ng-model="booking.addressLine1"><input id="addressLine2"
+							name="addressLine2" type="text" class="form-control input-lg"
+							placeholder="Adressezeile 2" ng-model="booking.addressLine2">
+						<div class="alert alert-danger"
+							ng-show="form.addressLine1.$error.minlength">
+							<span id="addressLine1.error"
+								ng-show="form.addressLine1.$error.minlength">Mindestens 5
+								Zeichen</span>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="control-label" for="zip">Postleitzahl</label><input
+							id="zip" name="zip" type="text" class="form-control input-lg"
+							placeholder="Bitte Postleitzahl eingeben" required="required"
+							ng-minlength="4" ng-model="booking.zip">
+						<div class="alert alert-danger"
+							ng-show="form.zip.$error.minlength">
+							<span id="zip.error" ng-show="form.zip.$error.minlength">Mindestens
+								4 Zeichen</span>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="control-label" for="city">Stadt</label><input
+							id="city" name="city" type="text" class="form-control input-lg"
+							placeholder="Bitte Stadt eingeben" required="required"
+							ng-minlength="2" ng-model="booking.city">
+						<div class="alert alert-danger"
+							ng-show="form.city.$error.minlength">
+							<span id="city.error" ng-show="form.city.$error.minlength">Mindestens
+								2 Zeichen</span>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="control-label" for="Telefon">Phone</label><input
+							id="phone" name="phone" type="text" class="form-control input-lg"
+							placeholder="Bitte Telefonnummer eingeben" required="required"
+							ng-pattern="/^((\+)?[1-9]{1,2})?([-\s\.])?((\(\d{1,4}\))|\d{1,4})(([-\s\.])?[0-9]{1,12}){1,2}(\s*(ext|x)\s*\.?:?\s*([0-9]+))?$/"
+							ng-model="booking.phone">
+						<div class="alert alert-danger"
+							ng-show="form.phone.$error.pattern">
+							<span id="phone.error" ng-show="form.phone.$error.pattern">Die
+								Telefonnummer ist ung&uuml;ltig!</span>
+						</div>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label" for="email">E-Mail</label><input
+						id="email" name="email" type="email" class="form-control input-lg"
+						placeholder="Bitte E-Mail-Adresse eingeben" required="required"
+						ng-pattern="/^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}$/"
+						ng-model="booking.email">
+					<div class="alert alert-danger" ng-show="form.email.$error.pattern">
+						<span id="email.error" ng-show="form.email.$error.pattern">E-Mail-Adresse
+							ung&uuml;ltig!</span>
+					</div>
+				</div>
+				<button ng-disabled="form.$invalid || wasSuccessful"
+					ng-click="create(booking)" id="create-button"
+					class="btn btn-lg btn-success">Buchen</button>
+			</div>
+		</div>
+	</div>
+</section>

@@ -1,0 +1,47 @@
+<section id="login">
+	<div class="container">
+		<div class="row">
+			<div class="col-lg-10 col-lg-offset-1">
+				<h1>LOGIN</h1>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-lg-10 col-lg-offset-1">
+				<h4>
+					Du bist neu? <a id="registration-link"
+						href="/app.html#/registration">Registriere Dich</a>
+				</h4>
+			</div>
+			<div class="col-lg-10 col-lg-offset-1">
+				<div class="alert alert-danger"
+					ng-show="loginFailed && !form.$invalid">Es existiert kein
+					Benutzer mit dieser E-Mail-Adresse und mit diesem Passwort</div>
+				<form name="form" autofill-submit="login(session)">
+					<div class="form-group">
+						<input id="input-username" autofill type="email" name="email"
+							class="form-control input-lg" ng-model="session.username"
+							placeholder="E-Mail-Adresse eingeben" required="required">
+						<div class="alert alert-danger" ng-show="form.email.$invalid">
+							<span ng-show="form.email.$error.required">Pflichtfeld!</span> <span
+								ng-show="form.email.$error.email">Diese E-Mail-Adresse
+								ist ung&uuml;ltig!</span>
+						</div>
+					</div>
+					<div class="form-group">
+						<input id="input-password" autofill type="password"
+							name="password" ng-model="session.password"
+							class="form-control input-lg" placeholder="Passwort eingeben"
+							ng-minlength="8" required>
+						<div class="alert alert-danger" ng-show="form.password.$invalid">
+							<span ng-show="form.password.$error.required">Pflichtfeld!</span>
+							<span ng-show="form.password.$error.minlength">Mindestens
+								8 Zeichen</span>
+						</div>
+					</div>
+					<button ng-disabled="form.$invalid" type="submit" id="login-button"
+						class="btn btn-lg btn-success">LOGIN</button>
+				</form>
+			</div>
+		</div>
+	</div>
+</section>
